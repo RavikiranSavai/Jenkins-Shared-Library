@@ -66,7 +66,7 @@ Explanation of the main directories and files:
 
 ```groovy
 #!/usr/bin/env groovy
-@Library('SharedPipelines')_ 		// Import the 'SharedPipelines' shared library.
+@Library('SharedPipelines') _ 		// Import the 'SharedPipelines' shared library.
 
 pipeline {
     agent any
@@ -206,7 +206,7 @@ Make sure to update the `mavenHome` variable with the path to your Maven install
 
 ```groovy
 #!/usr/bin/env groovy
-@Library('SharedPipelines')_ 		// Import the 'SharedPipelines' shared library.
+@Library('SharedPipelines') _ 		// Import the 'SharedPipelines' shared library.
 
 pipeline {
 	agent { label 'linux && jdk-1.10'} 		// Set the agent where the pipeline will run, in this case, a node with label 'linux && jdk-1.10'.
