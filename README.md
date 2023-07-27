@@ -65,6 +65,9 @@ Explanation of the main directories and files:
 ## Simple Declarative Pipeline that demonstrates the basic structure and stages of a CI/CD pipeline:
 
 ```groovy
+#!/usr/bin/env groovy
+@Library('SharedPipelines')_ 		// Import the 'SharedPipelines' shared library.
+
 pipeline {
     agent any
     environment {
@@ -149,6 +152,7 @@ pipeline {
 Here's an example of a Groovy script to run Maven commands:**
 
 ```groovy
+
 #!/usr/bin/env groovy
 
 def mavenHome = "/path/to/maven" // Update this with the path to your Maven installation
