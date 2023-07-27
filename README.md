@@ -34,16 +34,17 @@ It has all the library files with a .groovy extension.
 Sure! Here's the provided Declarative Pipeline with comments explaining each section:
 
 
-## ------------------------------------------------------------------------------------------------------------------------------------------
+## ------------------------------------------------------------------------------------------
 
-```groovy
+
+```
 #!/usr/bin/env groovy
-@Library('SharedPipelines')_ 									// Import the 'SharedPipelines' shared library.
+@Library('SharedPipelines')_ // Import the 'SharedPipelines' shared library.
 
 pipeline {
-	agent { label 'linux && jdk-1.10'} // Set the agent where the pipeline will run, in this case, a node with label 'linux && jdk-1.10'
+	agent { label 'linux && jdk-1.10'} // Set the agent where the pipeline will run, in this case, a node with label 'linux && jdk-1.10'.
 
-	environment { 										// Define environment variables for use in the pipeline.
+	environment { // Define environment variables for use in the pipeline.
 		APPLICATION_NAME = 'AccountService'
 		COMPONENT_NAME = 'Adapter'
 		ECR_URL = 'https://494230123456.dkr.ecr.eu-west-1.amazonaws.com/'
@@ -52,60 +53,60 @@ pipeline {
 		TOOL_JDK = 'JDK 1.13-Linux'
 	}
 
-	tools { 										// Define tools to be used in the pipeline.
+	tools { // Define tools to be used in the pipeline.
 		maven "$TOOL_MAVEN"
 		jdk "$TOOL_JDK"
 	}
 
-	options { 										// Define pipeline options.
-		timeout(time: 1, unit: 'HOURS') 						// Set a timeout for the entire pipeline to 1 hour.
-      	buildDiscarder(logRotator(numToKeepStr: '10')) 						// Configure log rotation to keep the last 10 builds.
-		skipDefaultCheckout() 						// Skip the default SCM checkout performed by Jenkins (custom checkout implemented later).
+	options { // Define pipeline options.
+		timeout(time: 1, unit: 'HOURS') // Set a timeout for the entire pipeline to 1 hour.
+      	buildDiscarder(logRotator(numToKeepStr: '10')) // Configure log rotation to keep the last 10 builds.
+		skipDefaultCheckout() // Skip the default SCM checkout performed by Jenkins (custom checkout implemented later).
     }
 
-	stages { 										// Define the stages of the pipeline.
-		stage('Prepare') { 								// Stage for preparing the pipeline before starting the build.
+	stages { // Define the stages of the pipeline.
+		stage('Prepare') { // Stage for preparing the pipeline before starting the build.
 			steps {
 				script{
-												// Check whether the branch name is valid.
+					// Check whether the branch name is valid.
 					if (!(branchNamingCheck())) {
 						error ('branch does not match required naming convention')
 						// TODO: You may consider emailing developers to instruct them to delete the invalid branch or delete it automatically.
                     }
 
-												// Check if the job was started by a user or automatically triggered.
+					// Check if the job was started by a user or automatically triggered.
 					if (checkJobTrigger()){
 						echo "job was started by a user, so we assume a deployment is required"
-						env.BUILD_TYPE = 'CICD' 			// Set environment variable BUILD_TYPE to 'CICD'.
+						env.BUILD_TYPE = 'CICD' // Set environment variable BUILD_TYPE to 'CICD'.
 					} else {
 						echo 'job was started by an automatic trigger, so we assume deployment is not required'
-						env.BUILD_TYPE = 'CI' 				// Set environment variable BUILD_TYPE to 'CI'.
+						env.BUILD_TYPE = 'CI' // Set environment variable BUILD_TYPE to 'CI'.
 					}
 
-					checkoutSource(deployframework:'false')		 // Custom checkout implementation with deployframework parameter set to 'false'.
+					checkoutSource(deployframework:'false') // Custom checkout implementation with deployframework parameter set to 'false'.
 				}
 			}
         }
 
-		stage ('Compile') { 								// Stage for compiling the project.
+		stage ('Compile') { // Stage for compiling the project.
 			steps {
 				script {runMavenPackage(goal:'deploy', binaryrepo:'nexus', releasearea:'s3')} // Custom script to run Maven with specified goals and parameters.
 			}
 		}
 
-		stage ('Sonarqube') { 								// Stage for running SonarQube analysis.
+		stage ('Sonarqube') { // Stage for running SonarQube analysis.
 			steps {
 				script {runSonarQubeAnalysis()} // Custom script to run SonarQube analysis.
 			}
 		}
 
-		stage ('Quality Gate') { 							// Stage for checking the quality gate.
+		stage ('Quality Gate') { // Stage for checking the quality gate.
 			steps {
 				script {checkSQQualityGate()} // Custom script to check the quality gate.
 			}
 		}
 
-		stage ('Docker Build') { 							// Stage for building Docker image.
+		stage ('Docker Build') { // Stage for building Docker image.
 			steps {
 				script {
 					def image = docker.build("$ECR_REPO") // Build a Docker image with the specified ECR repository URL.
@@ -113,17 +114,17 @@ pipeline {
 			}
 		}
 
-		stage ('Push to ECR') { 							// Stage for pushing the Docker image to ECR.
+		stage ('Push to ECR') { // Stage for pushing the Docker image to ECR.
 			when {
 				beforeAgent true
 				anyOf { branch 'develop'; branch 'release/*'; branch 'hotfix/*'} // Run this stage only for specific branches.
 				expression {
-					return (env.BUILD_TYPE == 'CICD'); 			// Run this stage only if the BUILD_TYPE is 'CICD'.
+					return (env.BUILD_TYPE == 'CICD'); // Run this stage only if the BUILD_TYPE is 'CICD'.
 				}
 			}
 			steps {
 				script {				
-					pushImageToECR() 					// Custom script to push the Docker image to ECR.
+					pushImageToECR() // Custom script to push the Docker image to ECR.
 				}
 			}
 		}
@@ -133,12 +134,12 @@ pipeline {
 				beforeAgent true
 				anyOf { branch 'develop'; branch 'release/*'; branch 'hotfix/*'} // Run this stage only for specific branches.
 				expression {
-					return (env.BUILD_TYPE == 'CICD'); 			// Run this stage only if the BUILD_TYPE is 'CICD'.
+					return (env.BUILD_TYPE == 'CICD'); // Run this stage only if the BUILD_TYPE is 'CICD'.
 				}
 			}
 			steps {
 				script {
-					tagSourceCode() 					// Custom script to tag the source code.
+					tagSourceCode() // Custom script to tag the source code.
 				}
 			}
 		}
@@ -148,9 +149,9 @@ pipeline {
 		always {
 			script {
 				echo 'cleaning workspace!!!'
-				deleteDir() 							// Clean up the workspace after each run.
+				deleteDir() // Clean up the workspace after each run.
 			}
-			sendEmailNotification currentBuild.result 				// Send an email notification based on the build result.
+			sendEmailNotification currentBuild.result // Send an email notification based on the build result.
 		}
 	}
 }
