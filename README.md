@@ -95,12 +95,26 @@ pipeline {
     }
 }
 ```
-
-In this example, the pipeline runs on any available agent (`agent any`) and defines two environment variables for the Maven and JDK tools. It uses the `options` block to set up log rotation, keeping the last 10 builds.
-
-The pipeline has four stages: `Build`, `Test`, `Deploy`, and `Promote to Production`. The `Build` stage checks out the source code from a Git repository and builds the project using Maven. The `Test` stage runs unit tests using Maven. The `Deploy` stage deploys the application to a staging server using Secure Copy (SCP). The `Promote to Production` stage only runs for the `master` branch and promotes the application to the production server.
-
-In the `post` section, there are three post-build actions. The `always` block cleans up the workspace after each run. The `success` block echoes a message for a successful build and deployment, and the `failure` block echoes a message for a failed build or deployment.
+- Pipeline runs on any available agent (`agent any`).
+- Defines environment variables for Maven and JDK tools (`MAVEN_HOME` and `JDK_HOME`).
+- Uses the `options` block to set up log rotation, keeping the last 10 builds.
+- Pipeline has four stages: Build, Test, Deploy, and Promote to Production.
+- Build stage:
+  - Checks out the source code from a Git repository using `git` step.
+  - Builds the project using Maven with the `clean package` goal.
+- Test stage:
+  - Runs unit tests using Maven with the `test` goal.
+- Deploy stage:
+  - Deploys the application to a staging server using Secure Copy (SCP).
+  - The application artifact is assumed to be generated in the `target` directory after the build.
+- Promote to Production stage:
+  - Only runs for the `master` branch.
+  - Promotes the application from the staging server to the production server using SSH.
+- `post` section:
+  - `always` block cleans up the workspace after each run using `cleanWs()` step.
+  - `success` block echoes a message for a successful build and deployment.
+  - `failure` block echoes a message for a failed build or deployment.
+- This is a basic example, and you can customize it for your specific project needs and add more stages and integrations as required.
 
 
 
