@@ -21,17 +21,44 @@ Think of it like a library of books, Instead of buying the same book over and ov
 
 ## Directory structure
 The directory structure of a Shared Library repository is as follows:
+The directory structure for a Jenkins shared library typically follows a specific convention to make it recognizable by Jenkins. Below is the standard directory structure for a Jenkins shared library:
 
-<img width="424" alt="Directory_structure" src="https://github.com/RavikiranSavai/Jenkins-Shared-Library/assets/76962621/13f3bca6-18ba-43b1-bafe-265f9e6a505d">
+```
+<root>
+├── src/
+│   ├── org/
+│   │   └── jenkinsci/
+│   │       └── plugins/
+│   │           └── sharedlibrary/
+│   │               ├── GlobalVar.groovy
+│   │               └── Utils.groovy
+├── vars/
+│   ├── myCustomStep.groovy
+│   └── myOtherStep.groovy
+├── resources/
+│   ├── someResourceFile.txt
+│   └── templates/
+│       └── myTemplate.txt
+├── Jenkinsfile
+├── README.md
+└── vars.txt
+```
 
-**vars**: This directory holds all the global shared library code that can be called from a pipeline.
-It has all the library files with a .groovy extension.
+Explanation of the main directories and files:
 
-**src**: It is added to the class path during very script compilation. We can add custom groovy code to extend our shared library code.
+1. `src/`: This directory contains the source code of the shared library. It follows the package naming convention for Groovy code. For example, `org.jenkinsci.plugins.sharedlibrary`.
 
-**resources**: All the non-groovy files required for your pipelines can be managed in this folder.
+2. `src/org/jenkinsci/plugins/sharedlibrary/`: This is the package directory that contains the Groovy files defining the shared library functions or utilities. You can have multiple files in this directory, each containing different reusable functions.
 
-Sure! Here's the provided Declarative Pipeline with comments explaining each section:
+3. `vars/`: This directory contains custom steps that can be directly called in Jenkins pipelines. Each Groovy file in this directory defines a single custom step.
+
+4. `resources/`: This directory can contain any resource files that might be required by the library, such as text files, properties files, or even templates.
+
+5. `Jenkinsfile`: This file is optional and is used for defining the Jenkins pipeline for testing the shared library itself. It's typically used for continuous integration and testing purposes.
+
+6. `README.md`: This file is optional but recommended. It can contain documentation about the shared library, including how to use it, examples, and explanations of each function.
+
+7. `vars.txt`: This file is optional and can contain documentation or descriptions of the custom steps defined in the `vars/` directory.
 
 
 ## ------------------------------------------------------------------------------------------
