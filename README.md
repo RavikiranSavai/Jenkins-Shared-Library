@@ -55,6 +55,8 @@ pipeline {
 
                 // Build the project using Maven
                 sh "${MAVEN_HOME}/bin/mvn clean package"
+
+		script {ProcessBuilder(goal:'deploy', binaryrepo:'nexus', releasearea:'s3')}
             }
         }
         stage('Test') {
@@ -100,12 +102,62 @@ The pipeline has four stages: `Build`, `Test`, `Deploy`, and `Promote to Product
 
 In the `post` section, there are three post-build actions. The `always` block cleans up the workspace after each run. The `success` block echoes a message for a successful build and deployment, and the `failure` block echoes a message for a failed build or deployment.
 
-This is a basic example of a Declarative Pipeline. You can extend and customize it to fit your specific project's requirements and add more stages, steps, and integrations as needed.
 
 
+**To run Maven using a Groovy script, you can use the `ProcessBuilder` class to execute Maven commands. 
+Here's an example of a Groovy script to run Maven commands:**
+
+```groovy
+#!/usr/bin/env groovy
+
+def mavenHome = "/path/to/maven" // Update this with the path to your Maven installation
+
+// Define the Maven command to execute (e.g., mvn clean package)
+def mavenCommand = "clean package"
+
+// Define the working directory where Maven will be executed (e.g., the project directory)
+def workingDirectory = "/path/to/your/project"
+
+try {
+    // Set up the ProcessBuilder to run the Maven command
+    ProcessBuilder processBuilder = new ProcessBuilder()
+    processBuilder.command("${mavenHome}/bin/mvn", mavenCommand.split())
+
+    // Set the working directory for the process
+    processBuilder.directory(new File(workingDirectory))
+
+    // Redirect the process output to the console
+    processBuilder.redirectErrorStream(true)
+
+    // Start the process
+    Process process = processBuilder.start()
+
+    // Read and print the output of the process
+    process.inputStream.eachLine { line ->
+        println(line)
+    }
+
+    // Wait for the process to finish
+    process.waitFor()
+
+    // Check the exit code of the process
+    int exitCode = process.exitValue()
+    if (exitCode == 0) {
+        println("Maven build successful!")
+    } else {
+        println("Maven build failed! Exit code: ${exitCode}")
+    }
+} catch (Exception e) {
+    println("Error executing Maven: ${e.message}")
+    e.printStackTrace()
+    System.exit(1)
+}
+```
+
+Make sure to update the `mavenHome` variable with the path to your Maven installation. Also, modify the `mavenCommand` variable to specify the Maven goals you want to run (e.g., "clean package" or any other goals). Set the `workingDirectory` variable to the path of your Maven project where the `pom.xml` is located.
 
 
-
+## In a realtime production CI CD
 
 ```groovy
 #!/usr/bin/env groovy
