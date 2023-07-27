@@ -37,7 +37,7 @@ Sure! Here's the provided Declarative Pipeline with comments explaining each sec
 ## ------------------------------------------------------------------------------------------
 ## simple Declarative Pipeline that demonstrates the basic structure and stages of a CI/CD pipeline:
 
-```
+```groovy
 pipeline {
     agent any
     environment {
