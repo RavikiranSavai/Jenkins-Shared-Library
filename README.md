@@ -61,7 +61,7 @@ Explanation of the main directories and files:
 7. `vars.txt`: This file is optional and can contain documentation or descriptions of the custom steps defined in the `vars/` directory.
 
 
-## ------------------------------------------------------------------------------------------
+## --------------------------------------------------------------------------------------
 ## Simple Declarative Pipeline that demonstrates the basic structure and stages of a CI/CD pipeline:
 
 ```groovy
