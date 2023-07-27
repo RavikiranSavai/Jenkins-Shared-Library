@@ -62,7 +62,7 @@ Explanation of the main directories and files:
 
 
 ## ------------------------------------------------------------------------------------------
-## simple Declarative Pipeline that demonstrates the basic structure and stages of a CI/CD pipeline:
+## Simple Declarative Pipeline that demonstrates the basic structure and stages of a CI/CD pipeline:
 
 ```groovy
 pipeline {
