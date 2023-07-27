@@ -39,10 +39,10 @@ Sure! Here's the provided Declarative Pipeline with comments explaining each sec
 
 ```
 #!/usr/bin/env groovy
-@Library('SharedPipelines')_ // Import the 'SharedPipelines' shared library.
+@Library('SharedPipelines')_ 		// Import the 'SharedPipelines' shared library.
 
 pipeline {
-	agent { label 'linux && jdk-1.10'} // Set the agent where the pipeline will run, in this case, a node with label 'linux && jdk-1.10'.
+	agent { label 'linux && jdk-1.10'} 		// Set the agent where the pipeline will run, in this case, a node with label 'linux && jdk-1.10'.
 
 	environment { // Define environment variables for use in the pipeline.
 		APPLICATION_NAME = 'AccountService'
