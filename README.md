@@ -22,18 +22,7 @@ Think of it like a library of books, Instead of buying the same book over and ov
 ## Directory structure
 The directory structure of a Shared Library repository is as follows:
 
-(root)
-+- src                     # Groovy source files
-|   +- org
-|       +- foo
-|           +- Bar.groovy  # for org.foo.Bar class
-+- vars
-|   +- foo.groovy          # for global 'foo' variable
-|   +- foo.txt             # help for 'foo' variable
-+- resources               # resource files (external libraries only)
-|   +- org
-|       +- foo
-|           +- bar.json    # static helper data for org.foo.Bar
+<img width="424" alt="Directory_structure" src="https://github.com/RavikiranSavai/Jenkins-Shared-Library/assets/76962621/13f3bca6-18ba-43b1-bafe-265f9e6a505d">
 
 **vars**: This directory holds all the global shared library code that can be called from a pipeline.
 It has all the library files with a .groovy extension.
